@@ -12,8 +12,10 @@ class Ship {
     // Check if the attack hits based on the accuracy
     if (Math.random() < this.accuracy) {
       target.hull -= this.firepower; // Reduce the target's health by firepower
+
       return true; // Attack successful
     }
+    playSound("miss");
     return false; // Attack missed
   }
 
@@ -70,25 +72,30 @@ console.log(numberOfEnemyLeft);
 // counter.textContent = numberOfEnemyLeft;
 
 function battleRound() {
+  playSound("laser");
   const currentAlien = alienFleet[currentAlienIndex]; // Get the current alien ship
   console.log("currentAlien", currentAlien);
   console.log("currentAlienIndex", currentAlienIndex);
   // Player's turn to attack
   if (USShip.attack(currentAlien)) {
     statusDiv.textContent = "You hit the alien ship!"; // Display success message
+    playSound("explosion");
     console.log(numberOfEnemyLeft);
     //Decrement the number os enemy ships left
     numberOfEnemyLeft--;
     enemyCount.textContent = numberOfEnemyLeft;
   } else {
-    statusDiv.textContent = "You missed!"; // Display miss message
+    statusDiv.textContent = "You missed!";
+    // Display miss message
   }
 
   // Check if the alien ship is destroyed
   if (currentAlien.isDestroyed()) {
     statusDiv.textContent += " Alien ship destroyed!"; // Update status
+    playSound("explosion");
     currentAlienIndex++; // Move to the next alien in the fleet
     if (currentAlienIndex >= alienFleet.length || numberOfEnemyLeft <= 0) {
+      //   playSound("explosion");
       // Check if all aliens are destroyed
       gameOver("You destroyed all alien ships! You win!"); // End game with win message
       return;
@@ -102,6 +109,8 @@ function battleRound() {
   setTimeout(() => {
     if (currentAlien.attack(USShip)) {
       statusDiv.textContent = "The alien ship hit you!"; // Display hit message
+      playSound("alien-laser");
+      playSound("explosion");
       usHull.textContent = USShip.hull;
     } else {
       statusDiv.textContent = "The alien ship missed!"; // Display miss message
@@ -114,7 +123,7 @@ function battleRound() {
     }
 
     updateHealthBars(); // Update health bars after the attack
-  }, 1000); // Delay for 1 second
+  }, 2000); // Delay for 1 second
 }
 
 // Function to handle the end of the game
@@ -124,5 +133,15 @@ function gameOver(message) {
   document.getElementById("attack-btn").disabled = true;
   document.getElementById("retreat-btn").disabled = true;
   statusDiv.textContent = "";
-  alert(message);
+  // Play sound and show alert after a short delay
+  playSound("victory"); // Play a victory sound or relevant effect
+  setTimeout(() => {
+    alert(message); // Show the alert after the sound
+    statusDiv.textContent = ""; // Clear the status message
+  }, 1000); // Delay to let the sound play
+}
+
+function playSound(effect) {
+  const audio = new Audio(`${effect}.mp3`); // Load the sound file
+  audio.play(); // Play the sound
 }
