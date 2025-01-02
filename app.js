@@ -1,10 +1,12 @@
 // Class representing a ship (player or alien)
 class Ship {
   constructor(hull, firepower, accuracy) {
-    (this.hull = hull),
-      (this.firepower = firepower),
-      (this.accuracy = accuracy);
+    this.hull = hull; // Current health of the ship
+    this.maxHull = hull; // Maximum health of the ship (for health bar scaling)
+    this.firepower = firepower; // Damage the ship deals per attack
+    this.accuracy = accuracy; // Probability of successfully hitting the target
   }
+
   // Method for attacking another ship
   attack(target) {
     // Check if the attack hits based on the accuracy
@@ -14,6 +16,7 @@ class Ship {
     }
     return false; // Attack missed
   }
+
   // Check if the ship is destroyed
   isDestroyed() {
     return this.hull <= 0; // Returns true if hull is zero or less
@@ -38,7 +41,6 @@ const playerHealthBar = document.getElementById("player-health"); // Player's he
 const alienHealthBar = document.getElementById("alien-health"); // Current alien's health bar
 console.log(alienHealthBar);
 const statusDiv = document.getElementById("status"); // Status message display
-document.getElementById("attack-btn").addEventListener("click", battleRound);
 //number of enemy yleft
 const enemyCount = document.querySelector(".enemyCount");
 console.log(enemyCount.value);
@@ -114,20 +116,6 @@ function battleRound() {
     updateHealthBars(); // Update health bars after the attack
   }, 1000); // Delay for 1 second
 }
-
-// Update the health bars for the player and current alien
-function updateHealthBars() {
-  // Update player's health bar based on remaining hull percentage
-  playerHealthBar.style.width = `${(USShip.hull / USShip.maxHull) * 100}%`;
-
-  // Update alien's health bar based on remaining hull percentage
-  const currentAlien = alienFleet[currentAlienIndex];
-  alienHealthBar.style.width = `${
-    (currentAlien.hull / currentAlien.maxHull) * 100
-  }%`;
-}
-
-// update the health bars for the player and current alien
 
 // Function to handle the end of the game
 function gameOver(message) {
