@@ -11,8 +11,13 @@ class Ship {
 const playerHealthBar = document.getElementById("player-health"); // Player's health bar
 const alienHealthBar = document.getElementById("alien-health"); // Current alien's health bar
 const statusDiv = document.getElementById("status"); // Status message display
+document.getElementById("attack-btn").addEventListener("click", battleRound);
 
 // Event listener for the "Retreat" button
 document.getElementById("retreat-btn").addEventListener("click", () => {
   gameOver("You retreated. Game over!"); // End game with retreat message
 });
+// Event listener for the "Attack" button
+document.getElementById("attack-btn").addEventListener("click", battleRound);
+
+function battleRound() {}
