@@ -36,10 +36,13 @@ console.log(alienFleet[0].firepower);
 // DOM elements for health bars and status display
 const playerHealthBar = document.getElementById("player-health"); // Player's health bar
 const alienHealthBar = document.getElementById("alien-health"); // Current alien's health bar
+console.log(alienHealthBar);
 const statusDiv = document.getElementById("status"); // Status message display
 document.getElementById("attack-btn").addEventListener("click", battleRound);
+//number of enemy yleft
 const enemyCount = document.querySelector(".enemyCount");
 console.log(enemyCount.value);
+// the US shipt Hull count
 const usHull = document.querySelector(".usHull");
 console.log(usHull.value);
 // Event listener for the "Retreat" button
@@ -49,6 +52,15 @@ document.getElementById("retreat-btn").addEventListener("click", () => {
 // Event listener for the "Attack" button
 document.getElementById("attack-btn").addEventListener("click", battleRound);
 
+function updateHealthBars() {
+  // Update player's health bar based on remaining hull percentage
+  playerHealthBar.style.width = `${(USShip.hull / USShip.maxHull) * 100}%`;
+  // Update alien's health bar based on remaining hull percentage
+  const currentAlien = alienFleet[currentAlienIndex];
+  alienHealthBar.style.width = `${
+    (currentAlien.hull / currentAlien.maxHull) * 100
+  }%`;
+}
 // Variable to track which alien ship is currently in battle
 let currentAlienIndex = 0;
 let numberOfEnemyLeft = alienFleet.length - 1;
@@ -63,7 +75,7 @@ function battleRound() {
   if (USShip.attack(currentAlien)) {
     statusDiv.textContent = "You hit the alien ship!"; // Display success message
     console.log(numberOfEnemyLeft);
-
+    //Decrement the number os enemy ships left
     numberOfEnemyLeft--;
     enemyCount.textContent = numberOfEnemyLeft;
   } else {
@@ -103,7 +115,7 @@ function battleRound() {
   }, 1000); // Delay for 1 second
 }
 
-// update the health bars for the player and current alien
+// Update the health bars for the player and current alien
 function updateHealthBars() {
   // Update player's health bar based on remaining hull percentage
   playerHealthBar.style.width = `${(USShip.hull / USShip.maxHull) * 100}%`;
@@ -115,11 +127,13 @@ function updateHealthBars() {
   }%`;
 }
 
+// update the health bars for the player and current alien
+
 // Function to handle the end of the game
 function gameOver(message) {
   statusDiv.textContent = message; // Display game-over message
   // Disable buttons to prevent further actions
   document.getElementById("attack-btn").disabled = true;
   document.getElementById("retreat-btn").disabled = true;
-  //   alert("You saved the WORLD! You destroyed all alien ships!");
+  alert("You saved the WORLD! You destroyed all alien ships!");
 }
