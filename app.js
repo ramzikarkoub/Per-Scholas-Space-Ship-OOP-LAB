@@ -5,7 +5,19 @@ class Ship {
       (this.firepower = firepower),
       (this.accuracy = accuracy);
   }
-  attack() {}
+  // Method for attacking another ship
+  attack(target) {
+    // Check if the attack hits based on the accuracy
+    if (Math.random() < this.accuracy) {
+      target.hull -= this.firepower; // Reduce the target's health by firepower
+      return true; // Attack successful
+    }
+    return false; // Attack missed
+  }
+  // Check if the ship is destroyed
+  isDestroyed() {
+    return this.hull <= 0; // Returns true if hull is zero or less
+  }
 }
 
 // Initialize the player's ship with fixed stats
@@ -34,4 +46,36 @@ document.getElementById("retreat-btn").addEventListener("click", () => {
 // Event listener for the "Attack" button
 document.getElementById("attack-btn").addEventListener("click", battleRound);
 
-function battleRound() {}
+// Variable to track which alien ship is currently in battle
+let currentAlienIndex = 0;
+
+function battleRound() {
+  const currentAlien = alienFleet[currentAlienIndex]; // Get the current alien ship
+  console.log("currentAlien", currentAlien);
+  console.log("currentAlienIndex", currentAlienIndex);
+  // Player's turn to attack
+  if (USShip.attack(currentAlien)) {
+    statusDiv.textContent = "You hit the alien ship!"; // Display success message
+  } else {
+    statusDiv.textContent = "You missed!"; // Display miss message
+  }
+
+  // Check if the alien ship is destroyed
+  if (currentAlien.isDestroyed()) {
+    statusDiv.textContent += " Alien ship destroyed!"; // Update status
+    currentAlienIndex++; // Move to the next alien in the fleet
+    if (currentAlienIndex >= alienFleet.length) {
+      // Check if all aliens are destroyed
+      gameOver("You destroyed all alien ships! You win!"); // End game with win message
+      return;
+    }
+    statusDiv.textContent += " A new alien ship approaches!"; // New alien incoming
+    updateHealthBars(); // Reset health bar for the new alien
+    return;
+  }
+}
+
+// update the health bars for the player and current alien
+function updateHealthBars() {
+  console.log("updated");
+}
