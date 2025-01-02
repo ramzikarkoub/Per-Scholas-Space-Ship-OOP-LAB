@@ -123,5 +123,6 @@ function gameOver(message) {
   // Disable buttons to prevent further actions
   document.getElementById("attack-btn").disabled = true;
   document.getElementById("retreat-btn").disabled = true;
-  alert("You saved the WORLD! You destroyed all alien ships!");
+  statusDiv.textContent = "";
+  alert(message);
 }
