@@ -13,13 +13,28 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!--[if lt IE 7]>
-      <p class="browsehappy">
-        You are using an <strong>outdated</strong> browser. Please
-        <a href="#">upgrade your browser</a> to improve your experience.
-      </p>
-    <![endif]-->
-
+    <div id="game-container">
+      <h1>Space Battle</h1>
+      <div id="status"></div>
+      <div id="spaceships">
+        <div id="player-ship">
+          <img src="player-ship.png" alt="USS Assembly" />
+          <div class="health-bar">
+            <div class="health" id="player-health"></div>
+          </div>
+        </div>
+        <div id="alien-ship">
+          <img src="alien-ship.png" alt="Alien Ship" />
+          <div class="health-bar">
+            <div class="health" id="alien-health"></div>
+          </div>
+        </div>
+      </div>
+      <div id="controls">
+        <button id="attack-btn">Attack</button>
+        <button id="retreat-btn">Retreat</button>
+      </div>
+    </div>
     <script src="app.js" async defer></script>
   </body>
 </html>
