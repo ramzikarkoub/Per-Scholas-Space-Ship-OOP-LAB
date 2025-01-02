@@ -38,7 +38,10 @@ const playerHealthBar = document.getElementById("player-health"); // Player's he
 const alienHealthBar = document.getElementById("alien-health"); // Current alien's health bar
 const statusDiv = document.getElementById("status"); // Status message display
 document.getElementById("attack-btn").addEventListener("click", battleRound);
-
+const enemyCount = document.querySelector(".enemyCount");
+console.log(enemyCount.value);
+const usHull = document.querySelector(".usHull");
+console.log(usHull.value);
 // Event listener for the "Retreat" button
 document.getElementById("retreat-btn").addEventListener("click", () => {
   gameOver("You retreated. Game over!"); // End game with retreat message
@@ -48,6 +51,9 @@ document.getElementById("attack-btn").addEventListener("click", battleRound);
 
 // Variable to track which alien ship is currently in battle
 let currentAlienIndex = 0;
+let numberOfEnemyLeft = alienFleet.length - 1;
+console.log(numberOfEnemyLeft);
+// counter.textContent = numberOfEnemyLeft;
 
 function battleRound() {
   const currentAlien = alienFleet[currentAlienIndex]; // Get the current alien ship
@@ -56,6 +62,10 @@ function battleRound() {
   // Player's turn to attack
   if (USShip.attack(currentAlien)) {
     statusDiv.textContent = "You hit the alien ship!"; // Display success message
+    console.log(numberOfEnemyLeft);
+
+    numberOfEnemyLeft--;
+    enemyCount.textContent = numberOfEnemyLeft;
   } else {
     statusDiv.textContent = "You missed!"; // Display miss message
   }
@@ -64,7 +74,7 @@ function battleRound() {
   if (currentAlien.isDestroyed()) {
     statusDiv.textContent += " Alien ship destroyed!"; // Update status
     currentAlienIndex++; // Move to the next alien in the fleet
-    if (currentAlienIndex >= alienFleet.length) {
+    if (currentAlienIndex >= alienFleet.length || numberOfEnemyLeft <= 0) {
       // Check if all aliens are destroyed
       gameOver("You destroyed all alien ships! You win!"); // End game with win message
       return;
@@ -73,9 +83,43 @@ function battleRound() {
     updateHealthBars(); // Reset health bar for the new alien
     return;
   }
+
+  // Alien's attack (after a delay)
+  setTimeout(() => {
+    if (currentAlien.attack(USShip)) {
+      statusDiv.textContent = "The alien ship hit you!"; // Display hit message
+      usHull.textContent = USShip.hull;
+    } else {
+      statusDiv.textContent = "The alien ship missed!"; // Display miss message
+    }
+
+    // Check if the player's ship is destroyed
+    if (USShip.isDestroyed()) {
+      console.log("we are fucked");
+      gameOver("Your ship has been destroyed! You lose."); // End game with loss message
+    }
+
+    updateHealthBars(); // Update health bars after the attack
+  }, 1000); // Delay for 1 second
 }
 
 // update the health bars for the player and current alien
 function updateHealthBars() {
-  console.log("updated");
+  // Update player's health bar based on remaining hull percentage
+  playerHealthBar.style.width = `${(USShip.hull / USShip.maxHull) * 100}%`;
+
+  // Update alien's health bar based on remaining hull percentage
+  const currentAlien = alienFleet[currentAlienIndex];
+  alienHealthBar.style.width = `${
+    (currentAlien.hull / currentAlien.maxHull) * 100
+  }%`;
+}
+
+// Function to handle the end of the game
+function gameOver(message) {
+  statusDiv.textContent = message; // Display game-over message
+  // Disable buttons to prevent further actions
+  document.getElementById("attack-btn").disabled = true;
+  document.getElementById("retreat-btn").disabled = true;
+  //   alert("You saved the WORLD! You destroyed all alien ships!");
 }
